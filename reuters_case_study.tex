@@ -1,0 +1,164 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside]{article}
+
+\usepackage{lipsum} % Package to generate dummy text throughout this template
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage{multicol} % Used for the two-column layout of the document
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Case Study:  Thomson Reuters $\bullet$ 1. November 2014} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{breakcites}
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{Sentiment Analysis with Deep Learning}} % Article title
+
+\author{
+\large
+\textsc{Gerrit Gruben}\thanks{This article has been created for the second round of the world-wide Texata Data Analytics contest in 2014. The author wants to thank HackerRank for the free invite and Thomson Reuters for the interesting data.}\\[2mm] % Your name
+\normalsize Free University Berlin \\ % Your institution
+\normalsize \href{mailto:gerrit.gruben@gmail.com}{gerrit.gruben@gmail.com} % Your email address
+\vspace{-5mm}
+}
+\date{}
+
+\renewcommand{\thesubsection}{\arabic{subsection}}
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+
+\noindent Thomson Reuters successfully transitioned into the information age by the deployment of modern methods of data processing and analytics on huge datasets. Classically, Thomson Reuters is a mass media company, but due to the recent efforts, it can nowadays be called an information firm. Thomson Reuters is in the unique position to combine its formidable resources, flexibility to adapt to the market and technical strategic partnerships to make use of the sizeable in- and out-flow of data and information it has control of. This work focuses on deploying deep learning methods to enable improved sentiment analysis of texts found in Reuter's StreetEvent data set. Deep learning methods have made an astonishing revival by showing successes in several domains such as image classification, pattern detection, speech recognition and natural language processing. They adapt especially well to the variety of data found as they can bring structure into unstructured data in an unsupervised setting.
+
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % Two-column layout throughout the main article text
+
+\section{Introduction}
+
+\subsection{Summary}
+\par This case study targets to lay groundwork for further leverage of big data by Thomson Reuters by structuring text data and extract features out of by using neuronal networks. These features then can be used, together with already discovered features from other sources, to run classification algorithms and/or predictive analysis. 
+
+\par The blog post found in \cite{blog:2014} indicates the value of the successful deployment analytical methods for Thomson Reuters to stay ahead of its competition. Obviously, Thomson Reuters already deploys resources to deal with the problem of making use of the data. It is indicated in \cite{techcrunch:2014} that Thomson Reuter's already deploys methods of sentiment analysis to Twitter. It is left unclear on which methods are precisely deployed.
+
+The value added by this report is supposed to be the following:
+\begin{compactitem}
+
+\item Discovering the value of deep learning for sentiment analysis of text to deal with variety of data;
+\item A component that splits Street Event text data given in XML into chunks of text that can be associated to a specific source (``Who said it and for which company?'');
+\item Code that makes use of Stanford's CoreNLP (\cite{manning-EtAl:2014:P14-5}) and instructions on how to use it within the popular Java technology provided by one of Thomson Reuter's strategic partners Oracle (\cite{forbes:2013}).
+\end{compactitem}
+
+\subsection{Use Case}
+
+\par The use case is to feed text data of Street Events into Stanford's CoreNLP. This returns for each statement of every single operator a tree structure that measures the sentiment of the statement. With some work this can be used as a feature for further investigations.
+
+\section{Methodology}
+
+\par Scala has been picked as the language to code in. Scala is interopable with Java and runs on the same virtual machine. The project is made with SBT (``Simple Build Tool'') as a build tool (similar to Apache Maven). Since Stanford's CoreNLP is written in Java it can be used from this implementation. 
+
+\par The StreetEvent data is given in XML format. In the context of this case study a project has been created that extracts data from this XML and starts to parse the text bodies of Street Events into chunks that is fed into a neuronal network for Sentiment Analysis. 
+
+\par The chunks have the form of tuples of the name of the talker and a text that encodes what he has been saying. For example, talker could be ``Lauren Fine,  Merrill Lynch'' who said ``Yes, thank you. Sorry for the background noise. I have a couple of questions. [...]''.
+
+%------------------------------------------------
+
+\section{Outcomes}
+
+\par A Scala program was written that is able to parse Street Event xml data. The program does its job, but due to time constraints there is a lack of visualisation of the results of the sentiment analysis. IntelliJ project files are provided and it is the recommended IDE to open this project.
+
+\par It can be run via running the SentimentAnalysis.jar with as parameter a path to a directory that contains EventData XML files or a XML file itself. It will then extract everything said by an operator of the conversation and analyse it.
+
+\par Further analysis should be done on the result found in the class StreetEventXMLReader. Of course it has to be evaluated whether the used training model (the neuronal net) provided by Stanford's CoreNLP is good enough. 
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem[Thomson Reuters, Sept. 2014]{blog:2014}
+Big Data: Successfully meeting the latest challenges in financial services
+\newblock {\em Thomson Reuters Blog} \url{http://tinyurl.com/ltqaa9h}
+
+ \bibitem[Techcrunch,  Feb. 2014]{techcrunch:2014}
+Thomson Reuters Taps Into Twitter For Big Data Sentiment Analysis
+\newblock {\em Tech Crunch} \url{http://tinyurl.com/mew5o29}
+
+\bibitem[Forbes, May. 2013]{forbes:2013}
+Thomson Reuters Transforms Big Data Into Big Business
+\newblock {\em Forbes} \url{http://tinyurl.com/qypsouq}
+
+\bibitem[Manning, Christopher D. et. al.]{manning-EtAl:2014:P14-5}
+The {Stanford} {CoreNLP} Natural Language Processing Toolkit
+\newblock \url{http://www.aclweb.org/anthology/P/P14/P14-5010}
+
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+
+\end{document}
